@@ -11,4 +11,6 @@ require "shidare"
 # Pry.start
 
 require "irb"
+
+class A < Shidare::Authentication; end
 IRB.start(__FILE__)
