@@ -22,7 +22,60 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Include your controller like below
+
+```ruby
+module Web::controllers::Users
+  class Create
+    include Web::Action
+    include Shidare::Authentication
+    
+    def call(params)
+    end
+  end
+end
+```
+## interface
+you can use below methods
+
+- login_as
+- logout_from
+- current_user
+- sigend_in?
+
+## deteil description about above methods
+
+### login_as
+
+```ruby
+login_as(UserRepository.new.first)
+```
+
+then current_user(:user) will return current login user
+
+### logout_from
+
+```ruby
+logout_from(:user)
+```
+
+then logout current login user and current_user(:user) will return nil
+
+### current_user
+
+```ruby
+current_user(:user)
+```
+
+then return current login user entity
+
+### signed_in?
+
+```ruby
+signed_in(:user)
+```
+
+then return true if login as user
 
 ## Development
 
