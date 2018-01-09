@@ -17,6 +17,10 @@ module Shidare
       end
     end
 
+    def initialize(session)
+      @session = session
+    end
+
     def login(id)
       session[:current_id] = id
     end
