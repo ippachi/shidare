@@ -22,16 +22,16 @@ module Shidare
     end
 
     def login(id)
-      session[:current_id] = id
+      @session[:current_id] = id
     end
 
 
     def logout
-      session[:current_id] = nil
+      @session[:current_id] = nil
     end
 
     def signed_in?
-      session["current_id"] ? true : false
+      @session["current_id"] ? true : false
     end
   end
 end
