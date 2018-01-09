@@ -17,5 +17,9 @@ module Shidare
     def current_user(user)
       Object.const_get("#{user.capitalize}Repository").new.find(session["#{user}_id".to_sym])
     end
+
+    def signed_in?(user)
+      session["#{user}_id"] ? true : false
+    end
   end
 end
