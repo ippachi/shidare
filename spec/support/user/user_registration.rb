@@ -18,4 +18,3 @@ class SignupAs
     signup_as(params[:user])
   end
 end
-

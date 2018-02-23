@@ -1,0 +1,2 @@
+require_relative 'not_generated_model_error'
+require_relative 'attributes_error'
