@@ -1,2 +1,2 @@
-require "shidare/version"
+require 'shidare/version'
 require 'shidare/registration'

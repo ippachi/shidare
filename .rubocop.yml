@@ -1,0 +1,15 @@
+AllCops:
+  TargetRubyVersion: 2.5
+
+  Exclude:
+    - 'vendor/bundle/**/*'
+    - 'shidare.gemspec'
+    - 'Rakefile'
+    - 'Gemfile'
+    - 'bin/*'
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false

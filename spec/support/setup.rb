@@ -31,13 +31,13 @@ Hanami::Model.load!
 class RouteMock
   def initialize
     router = Hanami::Router.new do
-      root to: ->(env) { [200, {}, ['root']] }
+      root to: ->(_env) { [200, {}, ['root']] }
     end
 
     @routes = Hanami::Routes.new(router)
   end
 
-  def method_missing(method_name, *args)
+  def method_missing(method_name, *_args)
     @routes.send(method_name)
   end
 end

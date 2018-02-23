@@ -7,7 +7,7 @@ module UserRegistration
 end
 
 app = Hanami::Router.new do
-  root to: ->(env) { [200, {}, ['root']] }
+  root to: ->(_env) { [200, {}, ['root']] }
 end
 
 class SignupAs

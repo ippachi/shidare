@@ -1,4 +1,4 @@
-require "shidare/version"
+require 'shidare/version'
 require 'bcrypt'
 require 'shidare/exceptions/exception'
 require 'shidare/refinements/string_extension'
@@ -10,7 +10,7 @@ module Shidare
     def self.included(klass)
       entity = klass.to_s.slice(/.*(?=Registration)/).to_snake
 
-      unless Object.const_get(entity.to_camel).schema.instance_variable_get(:@attributes).has_key?(:encrypted_password)
+      unless Object.const_get(entity.to_camel).schema.instance_variable_get(:@attributes).key?(:encrypted_password)
         raise AttributesError
       end
 
