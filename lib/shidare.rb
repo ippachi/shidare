@@ -36,22 +36,18 @@ module Shidare
         _repository(entity).new.create(registration_params)
       end
 
-      def _repository(entity)
-        Object.const_get("#{entity.to_camel}Repository")
-      end
-
-      def encrypted_password(password)
-        BCrypt::Password.create(password)
-      end
-
       klass.class_eval { private :signup_as }
 
     end
 
     private
 
-    def after_signup_path
-      redirect_to routes.root_path
+    def _repository(entity)
+      Object.const_get("#{entity.to_camel}Repository")
+    end
+
+    def encrypted_password(password)
+      BCrypt::Password.create(password)
     end
   end
 end
