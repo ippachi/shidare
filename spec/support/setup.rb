@@ -26,18 +26,10 @@ end
 class UserRepository < Hanami::Repository
 end
 
-Hanami::Model.load!
-
-class RouteMock
-  def initialize
-    router = Hanami::Router.new do
-      root to: ->(_env) { [200, {}, ['root']] }
-    end
-
-    @routes = Hanami::Routes.new(router)
-  end
-
-  def method_missing(method_name, *_args)
-    @routes.send(method_name)
-  end
+class People < Hanami::Entity
 end
+
+class PeopleRepository < Hanami::Repository
+end
+
+Hanami::Model.load!

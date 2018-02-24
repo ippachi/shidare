@@ -6,10 +6,6 @@ module UserRegistration
   include Shidare::Registration
 end
 
-app = Hanami::Router.new do
-  root to: ->(_env) { [200, {}, ['root']] }
-end
-
 class SignupAs
   include Hanami::Action
   include UserRegistration

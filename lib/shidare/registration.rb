@@ -1,43 +1,39 @@
 require 'shidare/version'
 require 'bcrypt'
-require 'shidare/exceptions/exception'
-require 'shidare/refinements/string_extension'
+require 'shidare/exceptions/attributes_error'
+require 'shidare/exceptions/model_not_generated_error'
+require 'shidare/extensions/string_extension'
+require 'shidare/extensions/entity_extension'
 
 module Shidare
-  using StringExtension
-
   module Registration
+    using StringExtension
+    using EntityExtension
+
     def self.included(klass)
-      entity = klass.to_s.slice(/.*(?=Registration)/).to_snake
+      entity_name = klass.to_s.slice(/.*(?=Registration)/)
+      raise ModelNotGenerated unless Object.const_defined?(entity_name)
+      entity = Object.const_get(entity_name.to_camel)
+      raise AttributesError unless entity.column?(:encrypted_password)
 
-      unless Object.const_get(entity.to_camel).schema.instance_variable_get(:@attributes).key?(:encrypted_password)
-        raise AttributesError
+      define_method :signup_as do |params|
+        entity.repository.new.create(formated_params(params))
       end
-
-      define_method :signup_as do |user_params|
-        registration_params = user_params.dup
-
-        registration_params[:encrypted_password] = encrypted_password(user_params[:password])
-        registration_params.delete(:password)
-
-        unless Object.const_defined?("#{entity.to_camel}Repository")
-          raise NotGenerateModel, "not generate #{entity.to_camel} model"
-        end
-
-        _repository(entity).new.create(registration_params)
-      end
-
-      klass.class_eval { private :signup_as }
     end
 
     private
 
-    def _repository(entity)
-      Object.const_get("#{entity.to_camel}Repository")
-    end
-
     def encrypted_password(password)
       BCrypt::Password.create(password)
+    end
+
+    def formated_params(params)
+      submit_params = params.dup
+
+      submit_params[:encrypted_password] \
+        = encrypted_password(params[:password])
+
+      submit_params.tap { |param| param.delete(:password) }
     end
   end
 end

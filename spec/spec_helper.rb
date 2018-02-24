@@ -11,6 +11,10 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  config.before(:each) do
+    UserRepository.new.clear
+  end
 end
 
 require_relative './support/setup'
