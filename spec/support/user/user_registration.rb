@@ -1,6 +1,5 @@
 require 'hanami/controller'
 require 'hanami/action'
-require 'hanami/router'
 
 module UserRegistration
   include Shidare::Registration

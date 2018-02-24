@@ -1,8 +1,6 @@
 require 'hanami/model'
 require 'hanami/model/migrator'
 require 'hanami/model/sql'
-require 'hanami/router'
-require 'hanami/routes'
 require 'pg'
 
 system 'dropdb shidare_test'
