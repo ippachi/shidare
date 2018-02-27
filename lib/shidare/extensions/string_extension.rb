@@ -1,3 +1,5 @@
+require 'hanami/utils'
+
 module Shidare
   module StringExtension
     refine String do
@@ -7,6 +9,10 @@ module Shidare
 
       def to_camel
         split('_').map(&:capitalize).join
+      end
+
+      def pluralize
+        Hanami::Utils::Inflector.pluralize(self)
       end
     end
   end

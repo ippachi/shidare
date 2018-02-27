@@ -14,6 +14,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     UserRepository.new.clear
+    AdminRepository.new.clear
   end
 end
 

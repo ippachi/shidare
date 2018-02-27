@@ -38,4 +38,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'hanami-controller', '>= 1.1.0'
   spec.add_runtime_dependency 'hanami-model', '>= 1.1.0'
   spec.add_runtime_dependency 'hanami-cli', '>= 0.1.0'
+  spec.add_runtime_dependency 'hanami-mailer', '>= 1.1.0'
+  spec.add_runtime_dependency 'hanami-utils', '>= 1.1.0'
 end

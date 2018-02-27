@@ -10,6 +10,10 @@ module Shidare
       def repository
         Object.const_get("#{self}Repository")
       end
+
+      def activatable?
+        column?(:activated_at) && column?(:activation_token)
+      end
     end
   end
 end
