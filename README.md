@@ -1,6 +1,6 @@
 # Shidare
 
-Simple sessoin for hanami by bcrypt
+Simple registration and session for Hanami
 
 ## Installation
 
@@ -18,62 +18,172 @@ Or install it yourself as:
 
     $ gem install shidare
 
-## Usage
+## Setting
 
-Include your controller like below
+You should make `shidare` directory into `lib`
+
+```
+lib
+├── app
+│   ├── entities
+│   ├── mailers
+│   ├── repositories
+│   └── shidare
+└── app.rb
+```
+
+And define `[model_name]Registration` into your `shidare` directory and include `Shidare::Registration`
+
+example, `app/lib/shidare/user_registraion`
 
 ```ruby
-module Web::controllers::Users
+module UserRegistration
+  include Shidare::Registration
+end
+```
+
+next include `UserRegistration` in your action.
+
+example, `app/apps/web/controllers/users/create.rb`
+
+```ruby
+module Web::Controllers::Users
   class Create
     include Web::Action
-    include Shidare::Authentication
-    
+    include UserRegistration
+
     def call(params)
     end
   end
 end
+
 ```
-## interface
-you can use below methods
 
-- login_as
-- logout_from
-- current_user
-- sigend_in?
+## Usage
 
-## deteil description about above methods
+### Registration
 
-### login_as
+**must**
+
+Add `email`, `encrypted_password`, `activation_token` and `activated_at` column to your model.
+and `activation_token` and `activated_at` is **NOT** null index.
+
+example, `db/migrations/[date]_create_users.rb`
 
 ```ruby
-login_as(UserRepository.new.first)
+Hanami::Model.migration do
+  change do
+    create_table :users do
+      primary_key :id
+
+      column :email             , String, null: false
+      column :encrypted_password, String, null: false
+      column :activation_token,   String
+
+      column :created_at, DateTime, null: false
+      column :updated_at, DateTime, null: false
+      column :activated_at, DateTime
+    end
+  end
+end
+
 ```
 
-then current_user(:user) will return current login user
+provide
+- `#signup_as`
+- `#activate_[model_name]`
+- `#activated?`
 
-### logout_from
+#### signup_as
+
+##### options
+- `mail` (default is `false`)
+
+Pass the `params`, so create record your into your model and activate.
 
 ```ruby
-logout_from(:user)
+module Web::Controllers::Users
+  class Create
+    include Web::Action
+    include UserRegistration
+
+    def call(params)
+      signup_as(params[:user]) # params -> { email: 'test@example.com', password: 'password', ... } 
+    end
+  end
+end
 ```
 
-then logout current login user and current_user(:user) will return nil
-
-### current_user
+If you pass the `mail: true`, you should define method `mailer` in your aciton class
 
 ```ruby
-current_user(:user)
+module Web::Controllers::Users
+  class Create
+    include Web::Action
+    include UserRegistration
+
+    def call(params)
+      signup_as(params[:user], mail: true) # params -> { email: 'test@example.com', password: 'password', ... } 
+    end
+    
+    private
+    
+    def mailer
+      Mailers::Welcome
+    end
+  end
+end
 ```
 
-then return current login user entity
+You can access entity attributes by `account` in your Mailer class
 
-### signed_in?
+example `app/lib/mailers/welcome.rb`
 
 ```ruby
-signed_in(:user)
+class Mailers::Welcome
+  include Hanami::Mailer
+
+  from    'noreply@exmaple.com'
+  to      :recipient
+  subject 'Hello'
+  
+  private
+  
+  def recipient
+    account.email
+  end
+  
+  def token
+    account.activation_token
+  end
+end
+
 ```
 
-then return true if login as user
+#### activate_[model_name]
+
+```ruby
+module Web::Controllers::Users
+  class AccountActivation
+    include Web::Action
+    include UserRegistration
+
+    def call(params)
+      acitivate_user(params) # params -> { email: 'user@example.com', activation_token: 'user_token' }
+    end
+  end
+end
+```
+
+#### activated?
+
+If record is activated return `true`
+
+exmaple
+
+```ruby
+UserRepository.new.first.activated? # => true if user is activated
+```
 
 ## Development
 
